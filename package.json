@@ -16,7 +16,7 @@
   "scripts": {
     "start": "node ./public/index.js",
     "dev": "nodemon ./public/index.js",
-    "deploy": "cd ~/Desktop/Projects/Timetract && git subtree push --prefix server heroku master"
+    "deploy": "git subtree push heroku master"
   },
   "name": "timetractserver",
   "version": "1.0.0",
