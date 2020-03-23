@@ -1,0 +1,86 @@
+type Query {
+  user(id: ID): User
+  users: [User!]!
+  group(id: ID!): Group
+  groups(filter: String, skip: Int, start: Int): [Group!]!
+}
+
+type Mutation {
+  register(input: RegisterInput!): AuthPayload
+  login(input: LoginInput!): AuthPayload
+  connectUserToRescueTime(input: ConnectUserToRescueTimeInput!): String
+  disconnectUserFromRescueTime: String
+  updateUserAvatar(input: UpdateUserAvatarInput!): String
+  deleteUserAvatar: String
+  leaveGroup(input: LeaveGroupInput!): Group
+  joinGroup(input: JoinGroupInput!): Group
+  createGroup(input: CreateGroupInput!): Group
+}
+
+input CreateGroupInput {
+  name: String!
+  description: String!
+}
+
+input LeaveGroupInput {
+  groupId: ID!
+}
+
+input JoinGroupInput {
+  groupId: ID!
+}
+
+input ConnectUserToRescueTimeInput {
+  authCode: String!
+}
+
+input RegisterInput {
+  username: String!
+  password: String!
+}
+
+input LoginInput {
+  username: String!
+  password: String!
+}
+
+input UpdateUserAvatarInput {
+  image: Upload!
+}
+
+type AuthPayload {
+  token: String
+  user: User
+}
+
+type User {
+  id: ID!
+  email: String!
+  username: String!
+  accessToken: String
+  rescueTimeData: RescueTimeData
+  groups: [Group!]!
+  avatarUrl: String
+}
+
+type RescueTimeData {
+  productiveTime: Int
+  distractingTime: Int
+  topSites: [Site!]
+}
+
+type Site {
+  name: String!
+  category: String!
+  productivity: Int!
+  timeSpent: Int!
+}
+
+type Group {
+  id: ID!
+  name: String!
+  description: String!
+  leader: User!
+  members: [User!]!
+}
+

@@ -1,0 +1,24 @@
+type User {
+  id: ID! @id @unique
+  username: String! @unique
+  password: String!
+  accessToken: String
+  rescueTimeData: RescueTimeData
+  groups: [Group!]! @relation(name: "GroupMembers", link: INLINE)
+  avatarUrl: String
+}
+
+type RescueTimeData @embedded {
+  productiveTime: Int
+  distractingTime: Int
+  updatedAt: DateTime! @updatedAt
+  createdAt: DateTime! @createdAt
+}
+
+type Group {
+  id: ID! @id @unique
+  name: String! @unique
+  leader: User! @relation(name: "GroupLeader", link: INLINE)
+  description: String!
+  members: [User!]! @relation(name: "GroupMembers")
+}
