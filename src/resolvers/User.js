@@ -52,8 +52,7 @@ async function rescueTimeData(parent, args, context, info) {
 }
 
 async function groups(parent, args, context) {
-  const userId = parent.id;
-  return context.prisma.user({id: userId}).groups();
+  return context.prisma.user({id: parent.id}).groups();
 }
 
 module.exports = {

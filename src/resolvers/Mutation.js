@@ -117,18 +117,10 @@ function joinGroup(parent, {input}, context) {
 
 async function createGroup(parent, {input}, context) {
   const userId = getUserId(context);
-  console.log(userId);
-  console.log(
-    {
-      leader: {connect: {id: userId}},
-      members: {connect: [{id: userId}]},
-      ...input
-    }
-  );
-  const group = context.prisma.createGroup({
+  const group = await context.prisma.createGroup({
+    ...input,
     leader: {connect: {id: userId}},
-    members: {connect: [{id: userId}]},
-    ...input
+    members: {connect: {id: userId}}
   });
   return group;
 }

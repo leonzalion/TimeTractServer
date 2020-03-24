@@ -3,7 +3,12 @@ function leader(parent, args, context) {
 }
 
 function members(parent, args, context) {
-  return context.prisma.group({id: parent.id}).members();
+  const where = args.filter ? { name_contains: args.filter } : {};
+  return context.prisma.group({id: parent.id}).members({
+    where,
+    skip: args.skip,
+    first: args.first,
+  });
 }
 
 module.exports = {

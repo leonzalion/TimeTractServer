@@ -20,8 +20,9 @@ scalar DateTime
 type Group {
   id: ID!
   name: String!
-  leader: User!
+  blurb: String!
   description: String!
+  leader: User!
   members(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
 }
 
@@ -34,8 +35,9 @@ type GroupConnection {
 input GroupCreateInput {
   id: ID
   name: String!
+  blurb: String
+  description: String
   leader: UserCreateOneInput!
-  description: String!
   members: UserCreateManyWithoutGroupsInput
 }
 
@@ -47,8 +49,9 @@ input GroupCreateManyWithoutMembersInput {
 input GroupCreateWithoutMembersInput {
   id: ID
   name: String!
+  blurb: String
+  description: String
   leader: UserCreateOneInput!
-  description: String!
 }
 
 type GroupEdge {
@@ -61,6 +64,8 @@ enum GroupOrderByInput {
   id_DESC
   name_ASC
   name_DESC
+  blurb_ASC
+  blurb_DESC
   description_ASC
   description_DESC
 }
@@ -68,6 +73,7 @@ enum GroupOrderByInput {
 type GroupPreviousValues {
   id: ID!
   name: String!
+  blurb: String!
   description: String!
 }
 
@@ -100,6 +106,20 @@ input GroupScalarWhereInput {
   name_not_starts_with: String
   name_ends_with: String
   name_not_ends_with: String
+  blurb: String
+  blurb_not: String
+  blurb_in: [String!]
+  blurb_not_in: [String!]
+  blurb_lt: String
+  blurb_lte: String
+  blurb_gt: String
+  blurb_gte: String
+  blurb_contains: String
+  blurb_not_contains: String
+  blurb_starts_with: String
+  blurb_not_starts_with: String
+  blurb_ends_with: String
+  blurb_not_ends_with: String
   description: String
   description_not: String
   description_in: [String!]
@@ -137,18 +157,21 @@ input GroupSubscriptionWhereInput {
 
 input GroupUpdateInput {
   name: String
-  leader: UserUpdateOneRequiredInput
+  blurb: String
   description: String
+  leader: UserUpdateOneRequiredInput
   members: UserUpdateManyWithoutGroupsInput
 }
 
 input GroupUpdateManyDataInput {
   name: String
+  blurb: String
   description: String
 }
 
 input GroupUpdateManyMutationInput {
   name: String
+  blurb: String
   description: String
 }
 
@@ -171,8 +194,9 @@ input GroupUpdateManyWithWhereNestedInput {
 
 input GroupUpdateWithoutMembersDataInput {
   name: String
-  leader: UserUpdateOneRequiredInput
+  blurb: String
   description: String
+  leader: UserUpdateOneRequiredInput
 }
 
 input GroupUpdateWithWhereUniqueWithoutMembersInput {
@@ -215,7 +239,20 @@ input GroupWhereInput {
   name_not_starts_with: String
   name_ends_with: String
   name_not_ends_with: String
-  leader: UserWhereInput
+  blurb: String
+  blurb_not: String
+  blurb_in: [String!]
+  blurb_not_in: [String!]
+  blurb_lt: String
+  blurb_lte: String
+  blurb_gt: String
+  blurb_gte: String
+  blurb_contains: String
+  blurb_not_contains: String
+  blurb_starts_with: String
+  blurb_not_starts_with: String
+  blurb_ends_with: String
+  blurb_not_ends_with: String
   description: String
   description_not: String
   description_in: [String!]
@@ -230,6 +267,7 @@ input GroupWhereInput {
   description_not_starts_with: String
   description_ends_with: String
   description_not_ends_with: String
+  leader: UserWhereInput
   members_some: UserWhereInput
   AND: [GroupWhereInput!]
 }

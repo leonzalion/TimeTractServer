@@ -2,7 +2,7 @@ type Query {
   user(id: ID): User
   users: [User!]!
   group(id: ID!): Group
-  groups(filter: String, skip: Int, start: Int): [Group!]!
+  groups(filter: String, skip: Int, first: Int): [Group!]!
 }
 
 type Mutation {
@@ -19,6 +19,7 @@ type Mutation {
 
 input CreateGroupInput {
   name: String!
+  blurb: String!
   description: String!
 }
 
@@ -79,8 +80,9 @@ type Site {
 type Group {
   id: ID!
   name: String!
+  blurb: String!
   description: String!
   leader: User!
-  members: [User!]!
+  members(filter: String, skip: Int, first: Int): [User!]!
 }
 

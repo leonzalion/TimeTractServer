@@ -18,7 +18,8 @@ type RescueTimeData @embedded {
 type Group {
   id: ID! @id @unique
   name: String! @unique
+  blurb: String! @default(value: "")
+  description: String! @default(value: "")
   leader: User! @relation(name: "GroupLeader", link: INLINE)
-  description: String!
   members: [User!]! @relation(name: "GroupMembers")
 }

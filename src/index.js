@@ -54,5 +54,5 @@ const server = new ApolloServer({
 server.applyMiddleware({app});
 
 app.listen({port: 4000}, () => {
-  console.log(`Server is running on http://localhost:4000${server.graphqlPath}`);
+  console.log(`Server is running on https://timetract.herokuapp.com/${server.graphqlPath}`);
 });
