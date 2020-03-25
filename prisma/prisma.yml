@@ -1,8 +1,6 @@
-endpoint: http://localhost:4466
+endpoint: https://timetractserver-0f09313454.herokuapp.com/server/dev
 datamodel: datamodel.prisma
-databaseType: document
 
 generate:
   - generator: javascript-client
-    output: ../src/generated/prisma-client
-
+    output: ./generated/prisma-client/

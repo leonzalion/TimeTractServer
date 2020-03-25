@@ -4,11 +4,12 @@ type User {
   password: String!
   accessToken: String
   rescueTimeData: RescueTimeData
-  groups: [Group!]! @relation(name: "GroupMembers", link: INLINE)
+  groups: [Group!]! @relation(name: "GroupMembers", link: TABLE)
   avatarUrl: String
 }
 
-type RescueTimeData @embedded {
+type RescueTimeData {
+  id: ID! @id
   productiveTime: Int
   distractingTime: Int
   updatedAt: DateTime! @updatedAt
@@ -20,6 +21,6 @@ type Group {
   name: String! @unique
   blurb: String! @default(value: "")
   description: String! @default(value: "")
-  leader: User! @relation(name: "GroupLeader", link: INLINE)
+  leader: User! @relation(name: "GroupLeader", link: TABLE)
   members: [User!]! @relation(name: "GroupMembers")
 }

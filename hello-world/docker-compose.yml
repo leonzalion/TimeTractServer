@@ -11,7 +11,8 @@ services:
         databases:
           default:
             connector: mongo
-            uri: mongodb://prisma:prisma@mongo
+            uri: mongodb+srv://<username>:<password>@timetract-rf1rm.mongodb.net/test
+
   mongo:
     image: mongo:3.6
     restart: always

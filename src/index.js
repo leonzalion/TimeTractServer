@@ -11,7 +11,6 @@ const PORT = process.env.PORT || 5000;
 const app = express();
 
 const bodyParser = require('body-parser');
-app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.json({limit: '60mb', extended: true}));
 app.use(bodyParser.urlencoded({extended: true}));
 
@@ -54,5 +53,5 @@ const server = new ApolloServer({
 server.applyMiddleware({app});
 
 app.listen({port: 4000}, () => {
-  console.log(`Server is running on https://timetract.herokuapp.com/${server.graphqlPath}`);
+  console.log(`Server is running on https://timetract.herokuapp.com${server.graphqlPath}`);
 });
