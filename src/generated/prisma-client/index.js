@@ -10,7 +10,7 @@ var models = [
   },
   {
     name: "RescueTimeData",
-    embedded: true
+    embedded: false
   },
   {
     name: "Group",
@@ -20,6 +20,6 @@ var models = [
 exports.Prisma = prisma_lib_1.makePrismaClientClass({
   typeDefs,
   models,
-  endpoint: `http://localhost:4466`
+  endpoint: `https://timetractserver-0f09313454.herokuapp.com/server/dev`
 });
 exports.prisma = new exports.Prisma();

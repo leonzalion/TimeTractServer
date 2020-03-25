@@ -7,6 +7,10 @@ module.exports = {
   count: Int!
 }
 
+type AggregateRescueTimeData {
+  count: Int!
+}
+
 type AggregateUser {
   count: Int!
 }
@@ -153,6 +157,8 @@ input GroupSubscriptionWhereInput {
   updatedFields_contains_some: [String!]
   node: GroupWhereInput
   AND: [GroupSubscriptionWhereInput!]
+  OR: [GroupSubscriptionWhereInput!]
+  NOT: [GroupSubscriptionWhereInput!]
 }
 
 input GroupUpdateInput {
@@ -268,8 +274,12 @@ input GroupWhereInput {
   description_ends_with: String
   description_not_ends_with: String
   leader: UserWhereInput
+  members_every: UserWhereInput
   members_some: UserWhereInput
+  members_none: UserWhereInput
   AND: [GroupWhereInput!]
+  OR: [GroupWhereInput!]
+  NOT: [GroupWhereInput!]
 }
 
 input GroupWhereUniqueInput {
@@ -286,6 +296,12 @@ type Mutation {
   upsertGroup(where: GroupWhereUniqueInput!, create: GroupCreateInput!, update: GroupUpdateInput!): Group!
   deleteGroup(where: GroupWhereUniqueInput!): Group
   deleteManyGroups(where: GroupWhereInput): BatchPayload!
+  createRescueTimeData(data: RescueTimeDataCreateInput!): RescueTimeData!
+  updateRescueTimeData(data: RescueTimeDataUpdateInput!, where: RescueTimeDataWhereUniqueInput!): RescueTimeData
+  updateManyRescueTimeDatas(data: RescueTimeDataUpdateManyMutationInput!, where: RescueTimeDataWhereInput): BatchPayload!
+  upsertRescueTimeData(where: RescueTimeDataWhereUniqueInput!, create: RescueTimeDataCreateInput!, update: RescueTimeDataUpdateInput!): RescueTimeData!
+  deleteRescueTimeData(where: RescueTimeDataWhereUniqueInput!): RescueTimeData
+  deleteManyRescueTimeDatas(where: RescueTimeDataWhereInput): BatchPayload!
   createUser(data: UserCreateInput!): User!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
@@ -315,6 +331,9 @@ type Query {
   group(where: GroupWhereUniqueInput!): Group
   groups(where: GroupWhereInput, orderBy: GroupOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Group]!
   groupsConnection(where: GroupWhereInput, orderBy: GroupOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): GroupConnection!
+  rescueTimeData(where: RescueTimeDataWhereUniqueInput!): RescueTimeData
+  rescueTimeDatas(where: RescueTimeDataWhereInput, orderBy: RescueTimeDataOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [RescueTimeData]!
+  rescueTimeDatasConnection(where: RescueTimeDataWhereInput, orderBy: RescueTimeDataOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): RescueTimeDataConnection!
   user(where: UserWhereUniqueInput!): User
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
@@ -322,22 +341,85 @@ type Query {
 }
 
 type RescueTimeData {
+  id: ID!
   productiveTime: Int
   distractingTime: Int
   updatedAt: DateTime!
   createdAt: DateTime!
 }
 
+type RescueTimeDataConnection {
+  pageInfo: PageInfo!
+  edges: [RescueTimeDataEdge]!
+  aggregate: AggregateRescueTimeData!
+}
+
 input RescueTimeDataCreateInput {
+  id: ID
   productiveTime: Int
   distractingTime: Int
 }
 
 input RescueTimeDataCreateOneInput {
   create: RescueTimeDataCreateInput
+  connect: RescueTimeDataWhereUniqueInput
+}
+
+type RescueTimeDataEdge {
+  node: RescueTimeData!
+  cursor: String!
+}
+
+enum RescueTimeDataOrderByInput {
+  id_ASC
+  id_DESC
+  productiveTime_ASC
+  productiveTime_DESC
+  distractingTime_ASC
+  distractingTime_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+}
+
+type RescueTimeDataPreviousValues {
+  id: ID!
+  productiveTime: Int
+  distractingTime: Int
+  updatedAt: DateTime!
+  createdAt: DateTime!
+}
+
+type RescueTimeDataSubscriptionPayload {
+  mutation: MutationType!
+  node: RescueTimeData
+  updatedFields: [String!]
+  previousValues: RescueTimeDataPreviousValues
+}
+
+input RescueTimeDataSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: RescueTimeDataWhereInput
+  AND: [RescueTimeDataSubscriptionWhereInput!]
+  OR: [RescueTimeDataSubscriptionWhereInput!]
+  NOT: [RescueTimeDataSubscriptionWhereInput!]
 }
 
 input RescueTimeDataUpdateDataInput {
+  productiveTime: Int
+  distractingTime: Int
+}
+
+input RescueTimeDataUpdateInput {
+  productiveTime: Int
+  distractingTime: Int
+}
+
+input RescueTimeDataUpdateManyMutationInput {
   productiveTime: Int
   distractingTime: Int
 }
@@ -348,6 +430,7 @@ input RescueTimeDataUpdateOneInput {
   upsert: RescueTimeDataUpsertNestedInput
   delete: Boolean
   disconnect: Boolean
+  connect: RescueTimeDataWhereUniqueInput
 }
 
 input RescueTimeDataUpsertNestedInput {
@@ -356,6 +439,20 @@ input RescueTimeDataUpsertNestedInput {
 }
 
 input RescueTimeDataWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
   productiveTime: Int
   productiveTime_not: Int
   productiveTime_in: [Int!]
@@ -389,10 +486,17 @@ input RescueTimeDataWhereInput {
   createdAt_gt: DateTime
   createdAt_gte: DateTime
   AND: [RescueTimeDataWhereInput!]
+  OR: [RescueTimeDataWhereInput!]
+  NOT: [RescueTimeDataWhereInput!]
+}
+
+input RescueTimeDataWhereUniqueInput {
+  id: ID
 }
 
 type Subscription {
   group(where: GroupSubscriptionWhereInput): GroupSubscriptionPayload
+  rescueTimeData(where: RescueTimeDataSubscriptionWhereInput): RescueTimeDataSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
 }
 
@@ -557,6 +661,8 @@ input UserSubscriptionWhereInput {
   updatedFields_contains_some: [String!]
   node: UserWhereInput
   AND: [UserSubscriptionWhereInput!]
+  OR: [UserSubscriptionWhereInput!]
+  NOT: [UserSubscriptionWhereInput!]
 }
 
 input UserUpdateDataInput {
@@ -697,7 +803,9 @@ input UserWhereInput {
   accessToken_ends_with: String
   accessToken_not_ends_with: String
   rescueTimeData: RescueTimeDataWhereInput
+  groups_every: GroupWhereInput
   groups_some: GroupWhereInput
+  groups_none: GroupWhereInput
   avatarUrl: String
   avatarUrl_not: String
   avatarUrl_in: [String!]
@@ -713,6 +821,8 @@ input UserWhereInput {
   avatarUrl_ends_with: String
   avatarUrl_not_ends_with: String
   AND: [UserWhereInput!]
+  OR: [UserWhereInput!]
+  NOT: [UserWhereInput!]
 }
 
 input UserWhereUniqueInput {
