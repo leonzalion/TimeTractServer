@@ -73,28 +73,17 @@ async function disconnectUserFromRescueTime(parent, args, context) {
 
 async function leaveGroup(parent, {input}, context) {
   const userId = getUserId(context);
-  const where = {id: input.groupId};
-  const groups = await context.prisma.group.update({
-    where,
-    data: {
-      members: {
-        disconnect: [{
-          id: userId
-        }]
-      }
-    }
-  });
   await context.prisma.user.update({
     where: {id: userId},
     data: {
       groups: {
-        disconnect: [{
-          id: input.groupId
-        }]
+        disconnect: {id: input.groupId}
       }
     }
   });
-  return groups;
+  return context.prisma.group.findOne({
+    where: {id: input.groupId}
+  });
 }
 
 async function joinGroup(parent, {input}, context) {
@@ -141,7 +130,7 @@ async function createGroup(parent, {input}, context) {
 
 async function updateUserAvatar(parent, {input}, context) {
   const userId = getUserId(context);
-  const user = context.prisma.user.findOne({
+  const user = await context.prisma.user.findOne({
     where: {id: userId}
   });
   const { createReadStream } = await input.image;
@@ -187,9 +176,9 @@ async function updateUserAvatar(parent, {input}, context) {
   });
 }
 
-function deleteUserAvatar(parent, args, context) {
+async function deleteUserAvatar(parent, args, context) {
   const userId = getUserId(context);
-  context.prisma.user.update({where: {id: userId}, data: {
+  await context.prisma.user.update({where: {id: userId}, data: {
     avatarUrl: null
   }});
   return null;
