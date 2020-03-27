@@ -62,19 +62,19 @@ async function connectUserToRescueTime(parent, {input}, context) {
   return accessToken;
 }
 
-function disconnectUserFromRescueTime(parent, args, context) {
+async function disconnectUserFromRescueTime(parent, args, context) {
   const userId = getUserId(context);
-  context.prisma.user.update({
+  await context.prisma.user.update({
     where: {id: userId},
     data: {accessToken: null}
   });
   return null;
 }
 
-function leaveGroup(parent, {input}, context) {
+async function leaveGroup(parent, {input}, context) {
   const userId = getUserId(context);
   const where = {id: input.groupId};
-  const groups = context.prisma.group.update({
+  const groups = await context.prisma.group.update({
     where,
     data: {
       members: {
@@ -84,7 +84,7 @@ function leaveGroup(parent, {input}, context) {
       }
     }
   });
-  context.prisma.user.update({
+  await context.prisma.user.update({
     where: {id: userId},
     data: {
       groups: {
@@ -97,9 +97,9 @@ function leaveGroup(parent, {input}, context) {
   return groups;
 }
 
-function joinGroup(parent, {input}, context) {
+async function joinGroup(parent, {input}, context) {
   const userId = getUserId(context);
-  const group = context.prisma.group.update({
+  const group = await context.prisma.group.update({
     where: {id: input.groupId},
     data: {
       members: {
@@ -109,7 +109,7 @@ function joinGroup(parent, {input}, context) {
       }
     }
   });
-  context.prisma.user.update({
+  await context.prisma.user.update({
     where: {id: userId},
     data: {
       groups: {
