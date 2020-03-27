@@ -118,11 +118,6 @@ async function createGroup(parent, {input}, context) {
       name: input.name,
       description: input.description,
       blurb: input.blurb,
-      leader: {
-        connect: {
-          id: userId
-        }
-      },
       members: {connect: {id: userId}}
     }
   });

@@ -16,7 +16,6 @@ async function group(parent, args, context) {
   const group = await context.prisma.group.findOne({
     where: {id: args.id}
   });
-  console.log(group);
   return group;
 }
 

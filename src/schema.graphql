@@ -82,7 +82,6 @@ type Group {
   name: String!
   blurb: String!
   description: String!
-  leader: User!
   members(filter: String, skip: Int, first: Int): [User!]!
 }
 
