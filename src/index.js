@@ -43,7 +43,6 @@ app.get('/', (req, res) => {
 const server = new ApolloServer({
   typeDefs: gql(fs.readFileSync(__dirname.concat('/schema.graphql'), 'utf8')),
   resolvers,
-  playground: true,
   context: request => {
     return {
       ...request,
