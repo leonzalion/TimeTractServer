@@ -1,7 +1,7 @@
 type Query {
-  user(id: ID): User
+  user(id: Int): User
   users: [User!]!
-  group(id: ID!): Group
+  group(id: Int!): Group
   groups(filter: String, skip: Int, first: Int): [Group!]!
 }
 
@@ -24,11 +24,11 @@ input CreateGroupInput {
 }
 
 input LeaveGroupInput {
-  groupId: ID!
+  groupId: Int
 }
 
 input JoinGroupInput {
-  groupId: ID!
+  groupId: Int
 }
 
 input ConnectUserToRescueTimeInput {
@@ -55,7 +55,7 @@ type AuthPayload {
 }
 
 type User {
-  id: ID!
+  id: Int
   email: String!
   username: String!
   accessToken: String
@@ -78,7 +78,7 @@ type Site {
 }
 
 type Group {
-  id: ID!
+  id: Int
   name: String!
   blurb: String!
   description: String!
