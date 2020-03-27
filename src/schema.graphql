@@ -67,7 +67,7 @@ type User {
 type RescueTimeData {
   productiveTime: Int
   distractingTime: Int
-  topSites: [Site!]
+  topSites: [Site!]!
 }
 
 type Site {
