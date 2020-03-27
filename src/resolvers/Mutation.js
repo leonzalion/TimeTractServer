@@ -8,15 +8,22 @@ const sightengine = require('sightengine')(process.env.SIGHTENGINE_ID,
   process.env.SIGHTENGINE_PASS);
 const concat = require('concat-stream');
 
-async function register(parent, {input}, context, info) {
+async function register(parent, {input}, context) {
   const password = await bcrypt.hash(input.password, 10);
-  const user = await context.prisma.createUser({...input, password});
+  const user = await context.prisma.user.create({
+    data: {
+      username: input.username,
+      password
+    }
+  });
   const token = jwt.sign({userId: user.id}, APP_SECRET);
   return {token, user};
 }
 
-async function login(parent, {input}, context, info) {
-  const user = await context.prisma.user({username: input.username});
+async function login(parent, {input}, context) {
+  const user = await context.prisma.user.findOne({
+    where: {username: input.username}
+  });
   if (!user) throw new Error('No such user found.');
   const valid = await bcrypt.compare(input.password, user.password);
   if (!valid) throw new Error('Invalid password');
@@ -24,7 +31,7 @@ async function login(parent, {input}, context, info) {
   return {token, user};
 }
 
-async function connectUserToRescueTime(parent, {input}, context, info) {
+async function connectUserToRescueTime(parent, {input}, context) {
   const userId = getUserId(context);
   const tokenUrl = 'https://www.rescuetime.com/oauth/token';
   const response = await fetch(tokenUrl, {
@@ -47,7 +54,7 @@ async function connectUserToRescueTime(parent, {input}, context, info) {
 
   const {access_token: accessToken} = result;
 
-  const updatedUser = await context.prisma.updateUser({
+  await context.prisma.user.update({
     data: {accessToken},
     where: {id: userId}
   });
@@ -57,7 +64,7 @@ async function connectUserToRescueTime(parent, {input}, context, info) {
 
 function disconnectUserFromRescueTime(parent, args, context) {
   const userId = getUserId(context);
-  context.prisma.updateUser({
+  context.prisma.user.update({
     where: {id: userId},
     data: {accessToken: null}
   });
@@ -67,7 +74,7 @@ function disconnectUserFromRescueTime(parent, args, context) {
 function leaveGroup(parent, {input}, context) {
   const userId = getUserId(context);
   const where = {id: input.groupId};
-  const groups = context.prisma.updateGroup({
+  const groups = context.prisma.group.update({
     where,
     data: {
       members: {
@@ -77,7 +84,7 @@ function leaveGroup(parent, {input}, context) {
       }
     }
   });
-  context.prisma.updateUser({
+  context.prisma.user.update({
     where: {id: userId},
     data: {
       groups: {
@@ -92,7 +99,7 @@ function leaveGroup(parent, {input}, context) {
 
 function joinGroup(parent, {input}, context) {
   const userId = getUserId(context);
-  const group = context.prisma.updateGroup({
+  const group = context.prisma.group.update({
     where: {id: input.groupId},
     data: {
       members: {
@@ -102,7 +109,7 @@ function joinGroup(parent, {input}, context) {
       }
     }
   });
-  context.prisma.updateUser({
+  context.prisma.user.update({
     where: {id: userId},
     data: {
       groups: {
@@ -117,17 +124,26 @@ function joinGroup(parent, {input}, context) {
 
 async function createGroup(parent, {input}, context) {
   const userId = getUserId(context);
-  const group = await context.prisma.createGroup({
-    ...input,
-    leader: {connect: {id: userId}},
-    members: {connect: {id: userId}}
+  return context.prisma.group.create({
+    data: {
+      name: input.name,
+      description: input.description,
+      blurb: input.blurb,
+      leader: {
+        connect: {
+          id: userId
+        }
+      },
+      members: {connect: {id: userId}}
+    }
   });
-  return group;
 }
 
-async function updateUserAvatar(parent, {input}, context, info) {
+async function updateUserAvatar(parent, {input}, context) {
   const userId = getUserId(context);
-  const user = context.prisma.user({id: userId});
+  const user = context.prisma.user.findOne({
+    where: {id: userId}
+  });
   const { createReadStream } = await input.image;
   const stream = createReadStream();
 
@@ -156,7 +172,7 @@ async function updateUserAvatar(parent, {input}, context, info) {
 
       if (uploadError) throw new Error("Failed to upload image.");
       const newUrl = uploadResult.secure_url;
-      await context.prisma.updateUser({
+      await context.prisma.user.update({
         data: {avatarUrl: newUrl},
         where: {id: userId}
       });
@@ -171,9 +187,9 @@ async function updateUserAvatar(parent, {input}, context, info) {
   });
 }
 
-function deleteUserAvatar(parent, args, context, info) {
+function deleteUserAvatar(parent, args, context) {
   const userId = getUserId(context);
-  context.prisma.updateUser({where: {id: userId}, data: {
+  context.prisma.user.update({where: {id: userId}, data: {
     avatarUrl: null
   }});
   return null;

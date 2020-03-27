@@ -1,5 +1,6 @@
 const {GraphQLServer} = require('graphql-yoga');
-const {prisma} = require('./generated/prisma-client');
+const {PrismaClient} = require('@prisma/client');
+const prisma = new PrismaClient();
 const {ApolloServer, gql} = require('apollo-server-express');
 const fs = require('fs');
 

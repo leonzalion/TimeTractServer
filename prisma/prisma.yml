@@ -1,6 +1,0 @@
-endpoint: https://timetractserver-0f09313454.herokuapp.com/server/dev
-datamodel: datamodel.prisma
-
-generate:
-  - generator: javascript-client
-    output: ./generated/prisma-client/

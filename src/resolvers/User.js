@@ -39,7 +39,7 @@ async function rescueTimeData(parent, args, context, info) {
 
   const updatedRescueTime = {productiveTime, distractingTime, topSites};
 
-  context.prisma.updateUser({
+  context.prisma.user.update({
     where: {id: parent.id},
     data: {
       rescueTimeData: {
@@ -52,7 +52,9 @@ async function rescueTimeData(parent, args, context, info) {
 }
 
 async function groups(parent, args, context) {
-  return context.prisma.user({id: parent.id}).groups();
+  return context.prisma.user.findOne({
+    where: {id: parent.id}
+  }).groups();
 }
 
 module.exports = {
