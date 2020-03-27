@@ -43,7 +43,13 @@ async function rescueTimeData(parent, args, context, info) {
     where: {id: parent.id},
     data: {
       rescueTimeData: {
-        update: updatedRescueTime
+        update: {
+          productiveTime,
+          distractingTime,
+          topSites: {
+            create: topSites
+          }
+        }
       }
     }
   });
