@@ -4,7 +4,7 @@
     "apollo-server-express": "^2.11.0",
     "await-to-js": "^2.1.1",
     "bad-words": "^3.0.3",
-    "bcrypt": "^4.0.0",
+    "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
     "cloudinary": "^1.19.0",
     "dotenv": "^8.2.0",
